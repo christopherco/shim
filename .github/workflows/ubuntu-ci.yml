@@ -1,0 +1,29 @@
+name: Shim build on Ubuntu
+
+on:
+  push:
+    branches: [ local ]
+  pull_request:
+    branches: [ local ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gnu-efi
+
+    - name: create distro_testkey key and certs
+      run: |
+        openssl genrsa -F4 -out distro_testkey.key 4096
+        openssl req -batch -new -x509 -key distro_testkey.key -out distro_testkey.pem
+        openssl x509 -outform der -in distro_testkey.pem -out distro_testkey.der
+
+    - name: make
+      run: make VENDOR_CERT_FILE=distro_testkey.der EFI_PATH=/usr/lib
