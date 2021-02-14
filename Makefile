@@ -235,6 +235,14 @@ else
 	$(PESIGN) -n certdb -i $< -c "shim" -s -o $@ -f
 endif
 
+test :
+	@make -f include/test.mk all
+
+$(patsubst %.c,%,$(wildcard test-*.c)) :
+	@make -f include/test.mk $@
+
+.PHONY : $(patsubst %.c,%,$(wildcard test-*.c)) test
+
 clean-shim-objs:
 	$(MAKE) -C lib -f $(TOPDIR)/lib/Makefile clean
 	@rm -rvf $(TARGET) *.o $(SHIM_OBJS) $(MOK_OBJS) $(FALLBACK_OBJS) $(KEYS) certdb $(BOOTCSVNAME)

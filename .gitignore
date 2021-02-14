@@ -28,3 +28,5 @@ version.c
 cov-int/
 scan-results/
 /sbat.*.csv
+test-*
+!test-*.c
