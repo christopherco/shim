@@ -13,7 +13,7 @@ get_sbat_field(CHAR8 *current, CHAR8 *end, const CHAR8 ** field, char delim)
         if (!field || !current || !end || current >= end)
                 return NULL;
 
-        offset = strchrnula(current, delim);
+        offset = strchrnul(current, delim);
         *field = current;
 
         if (!*offset)

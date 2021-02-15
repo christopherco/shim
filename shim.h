@@ -154,7 +154,7 @@
 #include "include/security_policy.h"
 #endif
 #include "include/simple_file.h"
-#include "include/str.h"
+#include "include/system/string.h"
 #include "include/tpm.h"
 #include "include/ucs2.h"
 #include "include/variables.h"

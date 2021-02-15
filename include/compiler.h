@@ -15,6 +15,9 @@
 #ifndef PUBLIC
 #define PUBLIC __attribute__((__visibility__ ("default")))
 #endif
+#ifndef DEPRECATED
+#define DEPRECATED __attribute__((__deprecated__))
+#endif
 #ifndef DESTRUCTOR
 #define DESTRUCTOR __attribute__((destructor))
 #endif
@@ -59,6 +62,9 @@
 #endif
 
 #ifndef __CONCAT
+#define __CONCAT(a, b) a ## b
+#endif
+#ifndef __CONCAT3
 #define __CONCAT3(a, b, c) a ## b ## c
 #endif
 #ifndef CAT
@@ -151,6 +157,61 @@
 #ifndef ALIGN_DOWN
 #define ALIGN_DOWN(x, a)        __ALIGN((x) - ((a) - 1), (a))
 #endif
+
+/**
+ * macros to build builtin wrappers
+ */
+#define mkbi1_(x, a)       CAT(__builtin_, x)(a)
+#define mkbi2_(x, a, b)    CAT(__builtin_, x)(a, b)
+#define mkbi3_(x, a, b, c) CAT(__builtin_, x)(a, b, c)
+#define mkdepbi1_(rtype, x, typea, a)           \
+	static inline UNUSED DEPRECATED rtype   \
+        x(typea a)                              \
+	{                                       \
+		return CAT(__builtin_, x)(a);   \
+	}
+#define mkdepbi2_(rtype, x, typea, a, typeb, b)         \
+	static inline UNUSED DEPRECATED rtype           \
+        x(typea a, typeb b)                             \
+	{                                               \
+		return CAT(__builtin_, x)(a, b);        \
+	}
+
+/**
+ * Builtins that don't go in string.h
+ */
+#define alloca(size) mkbi1_(alloca, size)
+#define aligned_alloca(size, alignment) \
+	mkbi2_(alloca_with_align, size, alignment)
+#define aligned_alloca_max(size, alignment, max_size) \
+	mkbi3_(alloca_with_align_and_max, size, alignment, max_size)
+#define unreachable() __builtin_unreachable()
+#define abs(j) mkbi1_(abs, j)
+#define labs(j) mkbi1_(labs, j)
+#define llabs(j) mkbi1_(llabs, j)
+#define imaxabs(j) mkbi1_(imaxabs, j)
+#define ffs(x) mkbi1_(ffs, x)
+#define clz(x) mkbi1_(clz, x)
+#define ctz(x) mkbi1_(ctz, x)
+#define clrsb(x) mkbi1_(clrsb, x)
+#define popcount(x) mkbi1_(popcount, x)
+#define parity(x) mkbi1_(parity, x)
+#define ffsl(x) mkbi1_(ffsl, x)
+#define clzl(x) mkbi1_(clzl, x)
+#define ctzl(x) mkbi1_(ctzl, x)
+#define clrsbl(x) mkbi1_(clrsbl, x)
+#define popcountl(x) mkbi1_(popcountl, x)
+#define parityl(x) mkbi1_(parityl, x)
+#define ffsll(x) mkbi1_(ffsll, x)
+#define clzll(x) mkbi1_(clzll, x)
+#define ctzll(x) mkbi1_(ctzll, x)
+#define clrsbll(x) mkbi1_(clrsbll, x)
+#define popcountll(x) mkbi1_(popcountll, x)
+#define parityll(x) mkbi1_(parityll, x)
+#define bswap16(x) mkbi1_(bswap16, x)
+#define bswap32(x) mkbi1_(bswap32, x)
+#define bswap64(x) mkbi1_(bswap64, x)
+#define extend_pointer(x) mkbi1_(extend_pointer, x)
 
 #endif /* !COMPILER_H_ */
 // vim:fenc=utf-8:tw=75:et
