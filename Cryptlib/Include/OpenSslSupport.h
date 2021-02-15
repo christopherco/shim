@@ -27,6 +27,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
  * Include stddef.h to avoid redefining "offsetof"
  */
 #include <stddef.h>
+#include <string.h>
 
 #define CONST const
 
@@ -296,23 +297,13 @@ void           *memset     (void *, int, size_t);
 void           *memchr     (const void *, int, size_t);
 int            memcmp      (const void *, const void *, size_t);
 void           *memmove    (void *, const void *, size_t);
-int            strcmp      (const char *, const char *);
 int            strncmp     (const char *, const char *, size_t);
-char           *strcpy     (char *, const char *);
 char           *strncpy    (char *, const char *, size_t);
-size_t         strlen      (const char *);
-char           *strcat     (char *, const char *);
-char           *strchr     (const char *, int);
-int            strcasecmp  (const char *, const char *);
-int            strncasecmp (const char *, const char *, size_t);
 char           *strncpy    (char *, const char *, size_t);
 int            strncmp     (const char *, const char *, size_t);
-char           *strrchr    (const char *, int);
 unsigned long  strtoul     (const char *, char **, int);
 long           strtol      (const char *, char **, int);
 char           *strerror   (int);
-size_t         strspn      (const char *, const char *);
-size_t         strcspn     (const char *, const char *);
 int            printf      (const char *, ...);
 int            sscanf      (const char *, const char *, ...);
 int            open        (const char *, int, ...);
@@ -364,17 +355,6 @@ extern FILE  *stdout;
 //
 // Macros that directly map functions to BaseLib, BaseMemoryLib, and DebugLib functions
 //
-#define memcpy(dest,source,count)         ( {CopyMem(dest,source,(UINTN)(count)); dest; })
-#define memset(dest,ch,count)             SetMem(dest,(UINTN)(count),(UINT8)(ch))
-#define memchr(buf,ch,count)              ScanMem8((CHAR8 *)buf,(UINTN)(count),ch)
-#define memcmp(buf1,buf2,count)           (int)(CompareMem(buf1,buf2,(UINTN)(count)))
-#define memmove(dest,source,count)        CopyMem(dest,source,(UINTN)(count))
-#define strlen(str)                       (size_t)(AsciiStrLen((CHAR8 *)str))
-#define strcpy(strDest,strSource)         AsciiStrCpy(strDest,strSource)
-#define strncpy(strDest,strSource,count)  AsciiStrnCpy(strDest,strSource,(UINTN)count)
-#define strcat(strDest,strSource)         AsciiStrCat(strDest,strSource)
-#define strchr(str,ch)                    (char *)(ScanMem8((CHAR8 *)str,AsciiStrSize((CHAR8 *)str),ch))
-#define strncmp(string1,string2,count)    (int)(AsciiStrnCmp(string1,string2,(UINTN)(count)))
 #define localtime(timer)                  NULL
 #define assert(expression)
 #define atoi(nptr)                        AsciiStrDecimalToUintn(nptr)

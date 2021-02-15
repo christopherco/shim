@@ -34,6 +34,7 @@
 #include <efiip.h>
 #endif
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 

@@ -1,9 +1,11 @@
 
-EFI_INCLUDES	= -I$(TOPDIR)/../Include \
+EFI_INCLUDES	= -$(SYSTEM_INCLUDES) \
 		  -I$(EFI_INCLUDE) -I$(EFI_INCLUDE)/$(ARCH) -I$(EFI_INCLUDE)/protocol \
+		  -I$(TOPDIR) -I$(TOPDIR)/.. -I$(TOPDIR)/../Include/ -I$(TOPDIR)/crypto \
 		  -I$(TOPDIR)/crypto/asn1 -I$(TOPDIR)/crypto/evp -I$(TOPDIR)/crypto/modes -I$(TOPDIR)/crypto/include
 
-CFLAGS		= -ggdb -O0 -I$(TOPDIR) -I$(TOPDIR)/.. -I$(TOPDIR)/../Include/ -I$(TOPDIR)/crypto \
+CFLAGS		= -ggdb -O0 \
+		  $(EFI_INCLUDES) \
 		  -fno-stack-protector -fno-strict-aliasing -fpic -fshort-wchar -nostdinc \
 		  -ffreestanding -std=gnu89 -I$(shell $(CC) -print-file-name=include) \
 		  -Wall $(EFI_INCLUDES) -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DOPENSSL_SMALL_FOOTPRINT -DPEDANTIC
