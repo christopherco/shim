@@ -7,15 +7,16 @@
 
 CC = gcc
 CFLAGS = -O2 -ggdb -std=gnu89 \
-	 -I/usr/include/efi -iquote . \
+	 -Iinclude -I/usr/include/efi -iquote . \
 	 -fshort-wchar -flto -fno-builtin \
 	 -Wall -Wsign-compare -Werror \
+	 -Wno-deprecated-declarations -Wno-pointer-sign \
 	 -DEFI_FUNCTION_WRAPPER -DGNU_EFI_USE_MS_ABI -DPAGE_SIZE=4096 \
 	 -DSHIM_UNIT_TEST
 
 tests := $(patsubst %.c,%,$(wildcard test-*.c))
 
-$(tests) :: test-% : test-%.c test.c $(wildcard %.c)
+$(tests) :: test-% : test-%.c test.c sbat.c $(wildcard %.c)
 	$(CC) $(CFLAGS) -o $@ $^
 	./$@
 

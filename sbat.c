@@ -4,7 +4,9 @@
  */
 
 #include "shim.h"
-#include "string.h"
+#include "system/string.h"
+#include "str.h"
+#include <stdio.h>
 
 CHAR8 *
 get_sbat_field(CHAR8 *current, CHAR8 *end, const CHAR8 **field, char delim)

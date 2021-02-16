@@ -61,7 +61,7 @@ strndupa(const CHAR8 * const src, const UINTN srcmax)
 		strncpya(news, src, len);
 	return news;
 }
-
+/*
 static inline
 __attribute__((unused))
 CHAR8 *
@@ -83,7 +83,7 @@ translate_slashes(CHAR8 *out, const char *str)
 	out[j] = '\0';
 	return out;
 }
-
+*/
 static inline UNUSED CHAR8 *
 strchrnula(const CHAR8 *s, int c)
 {

@@ -241,6 +241,9 @@ verify_buffer (char *data, int datasize,
 	perror_(__FILE__, __LINE__ - 1, __func__, fmt, ##__VA_ARGS__)
 #define LogError(fmt, ...) \
 	LogError_(__FILE__, __LINE__ - 1, __func__, fmt, ##__VA_ARGS__)
+#else
+#define perror(fmt, ...)
+#define LogError(fmt, ...)
 #endif
 
 #endif /* SHIM_H_ */

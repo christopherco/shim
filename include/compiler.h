@@ -177,7 +177,7 @@
 /**
  * Builtins that don't go in string.h
  */
-#define alloca(size) mkbi1_(alloca, size)
+//#define alloca(size) mkbi1_(alloca, size)
 #define aligned_alloca(size, alignment) \
 	mkbi2_(alloca_with_align, size, alignment)
 #define aligned_alloca_max(size, alignment, max_size) \
