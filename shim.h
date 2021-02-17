@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause-Patent
+
 #ifndef SHIM_H_
 #define SHIM_H_
 
@@ -39,8 +41,6 @@
 #include <stdint.h>
 
 #define nonnull(...) __attribute__((__nonnull__(__VA_ARGS__)))
-
-#define min(a, b) ({(a) < (b) ? (a) : (b);})
 
 #ifdef __x86_64__
 #ifndef DEFAULT_LOADER
@@ -242,8 +242,5 @@ verify_buffer (char *data, int datasize,
 #define LogError(fmt, ...) \
 	LogError_(__FILE__, __LINE__ - 1, __func__, fmt, ##__VA_ARGS__)
 #endif
-
-#define MIN(a, b) (((a) <= (b))?(a):(b))
-#define MAX(a, b) (((a) <= (b))?(b):(a))
 
 #endif /* SHIM_H_ */

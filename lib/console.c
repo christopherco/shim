@@ -1,8 +1,7 @@
+// SPDX-License-Identifier: BSD-2-Clause-Patent
 /*
  * Copyright 2012 <James.Bottomley@HansenPartnership.com>
  * Copyright 2013 Red Hat Inc. <pjones@redhat.com>
- *
- * see COPYING file
  */
 #include <efi.h>
 #include <efilib.h>
@@ -212,7 +211,7 @@ console_print_box_at(CHAR16 *str_arr[], int highlight,
 			if (col < 0)
 				col = 0;
 
-			CopyMem(Line + col + 1, s, min(len, size_cols - 2)*2);
+			CopyMem(Line + col + 1, s, MIN(len, size_cols - 2)*2);
 		}
 		if (line >= 0 && line == highlight)
 			co->SetAttribute(co, EFI_LIGHTGRAY |
@@ -602,7 +601,7 @@ static struct {
 	{  EFI_SECURITY_VIOLATION,     L"Security Violation"},
 
 	// warnings
-	{  EFI_WARN_UNKOWN_GLYPH,      L"Warning Unknown Glyph"},
+	{  EFI_WARN_UNKNOWN_GLYPH,     L"Warning Unknown Glyph"},
 	{  EFI_WARN_DELETE_FAILURE,    L"Warning Delete Failure"},
 	{  EFI_WARN_WRITE_FAILURE,     L"Warning Write Failure"},
 	{  EFI_WARN_BUFFER_TOO_SMALL,  L"Warning Buffer Too Small"},
@@ -678,33 +677,6 @@ setup_verbosity(VOID)
 	}
 
 	setup_console(-1);
-}
-
-/* Included here because they mess up the definition of va_list and friends */
-#include <Library/BaseCryptLib.h>
-#include <openssl/err.h>
-#include <openssl/crypto.h>
-
-static int
-print_errors_cb(const char *str, size_t len, void *u)
-{
-	console_print(L"%a", str);
-
-	return len;
-}
-
-EFI_STATUS
-print_crypto_errors(EFI_STATUS efi_status,
-		    char *file, const char *func, int line)
-{
-	if (!(verbose && EFI_ERROR(efi_status)))
-		return efi_status;
-
-	console_print(L"SSL Error: %a:%d %a(): %r\n", file, line, func,
-		      efi_status);
-	ERR_print_errors_cb(print_errors_cb, NULL);
-
-	return efi_status;
 }
 
 VOID

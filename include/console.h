@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause-Patent
+
 #ifndef SHIM_CONSOLE_H
 #define SHIM_CONSOLE_H
 
@@ -6,6 +8,12 @@
 
 #define PrintAt(fmt, ...) \
 	({"Do not directly call PrintAt() use console_print_at() instead" = 1;});
+
+#if !defined(EFI_WARN_UNKNOWN_GLYPH) && defined(EFI_WARN_UNKOWN_GLYPH)
+#define EFI_WARN_UNKNOWN_GLYPH EFI_WARN_UNKOWN_GLYPH
+#elif !defined(EFI_WARN_UNKNOWN_GLYPH)
+#define EFI_WARN_UNKNOWN_GLYPH EFIWARN(1)
+#endif
 
 EFI_STATUS
 console_get_keystroke(EFI_INPUT_KEY *key);
@@ -32,6 +40,12 @@ void
 console_alertbox(CHAR16 **title);
 void
 console_notify(CHAR16 *string);
+void
+console_save_and_set_mode(SIMPLE_TEXT_OUTPUT_MODE * SavedMode);
+void
+console_restore_mode(SIMPLE_TEXT_OUTPUT_MODE * SavedMode);
+int
+console_countdown(CHAR16* title, const CHAR16* message, int timeout);
 void
 console_reset(void);
 void

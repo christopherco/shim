@@ -1,7 +1,4 @@
-/*
- * compiler.h
- * Copyright 2019 Peter Jones <pjones@redhat.com>
- */
+// SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #ifndef COMPILER_H_
 #define COMPILER_H_
@@ -212,6 +209,8 @@
 #define bswap32(x) mkbi1_(bswap32, x)
 #define bswap64(x) mkbi1_(bswap64, x)
 #define extend_pointer(x) mkbi1_(extend_pointer, x)
+#define MIN(a, b) ({(a) < (b) ? (a) : (b);})
+#define MAX(a, b) ({(a) <= (b) ? (b) : (a);})
 
 #endif /* !COMPILER_H_ */
 // vim:fenc=utf-8:tw=75:et

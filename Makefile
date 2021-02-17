@@ -33,18 +33,19 @@ CFLAGS += -DENABLE_SHIM_CERT
 else
 TARGETS += $(MMNAME) $(FBNAME)
 endif
-OBJS	= shim.o mok.o netboot.o cert.o replacements.o tpm.o version.o errlog.o sbat.o sbat_data.o pe.o
+OBJS	= shim.o mok.o netboot.o cert.o replacements.o tpm.o version.o errlog.o sbat.o sbat_data.o pe.o httpboot.o
 KEYS	= shim_cert.h ocsp.* ca.* shim.crt shim.csr shim.p12 shim.pem shim.key shim.cer
-ORIG_SOURCES	= shim.c mok.c netboot.c replacements.c tpm.c errlog.c sbat.c pe.c shim.h version.h $(wildcard include/*.h)
+ORIG_SOURCES	= shim.c mok.c netboot.c replacements.c tpm.c errlog.c sbat.c pe.c httpboot.c shim.h version.h $(wildcard include/*.h)
 MOK_OBJS = MokManager.o PasswordCrypt.o crypt_blowfish.o errlog.o sbat_data.o
 ORIG_MOK_SOURCES = MokManager.c PasswordCrypt.c crypt_blowfish.c shim.h $(wildcard include/*.h)
 FALLBACK_OBJS = fallback.o tpm.o errlog.o sbat_data.o
 ORIG_FALLBACK_SRCS = fallback.c
 SBATPATH = data/sbat.csv
 
-ifneq ($(origin ENABLE_HTTPBOOT), undefined)
-	OBJS += httpboot.o
-	SOURCES += httpboot.c include/httpboot.h
+ifeq ($(SOURCE_DATE_EPOCH),)
+	UNAME=$(shell uname -s -m -p -i -o)
+else
+	UNAME=buildhost
 endif
 
 SOURCES = $(foreach source,$(ORIG_SOURCES),$(TOPDIR)/$(source)) version.c
@@ -67,7 +68,7 @@ shim_cert.h: shim.cer
 
 version.c : $(TOPDIR)/version.c.in
 	sed	-e "s,@@VERSION@@,$(VERSION)," \
-		-e "s,@@UNAME@@,$(shell uname -s -m -p -i -o)," \
+		-e "s,@@UNAME@@,$(UNAME)," \
 		-e "s,@@COMMIT@@,$(COMMIT_ID)," \
 		< $< > $@
 
@@ -229,7 +230,10 @@ endif
 
 ifneq ($(origin ENABLE_SBSIGN),undefined)
 %.efi.signed: %.efi shim.key shim.crt
-	$(SBSIGN) --key shim.key --cert shim.crt --output $@ $<
+	@$(SBSIGN) \
+		--key certdb/shim.key \
+		--cert certdb/shim.crt \
+		--output $@ $<
 else
 %.efi.signed: %.efi certdb/secmod.db
 	$(PESIGN) -n certdb -i $< -c "shim" -s -o $@ -f
@@ -283,4 +287,4 @@ archive: tag
 
 .PHONY : install-deps shim.key
 
-export ARCH CC LD OBJCOPY EFI_INCLUDE
+export ARCH CC LD OBJCOPY EFI_INCLUDE OPTIMIZATIONS
